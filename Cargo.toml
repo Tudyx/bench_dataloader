@@ -1,0 +1,19 @@
+[package]
+name = "bench_dataloader"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ai-dataloader = { path = "../ai-dataloader", features = ["torch"] }
+clap = { version = "4.2.1", features = ["derive"] }
+itertools = "0.10.5"
+
+[[bin]]
+name = "rust_dataloader"
+path= "src/rust_dataloader.rs"
+
+[[bin]]
+name = "run_all_benches"
+path = "src/run_all_benches.rs"
