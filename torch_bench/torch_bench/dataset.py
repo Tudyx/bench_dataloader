@@ -11,7 +11,6 @@ from torch.utils.data import Dataset
 
 # from src.datasets.transformations.to_tensor import to_tensor
 
-from torch_bench.transform import to_tensor
 
 # from src.datasets.transformations.normalize import normalize
 # from src.datasets.transformations.cutout import cutout
