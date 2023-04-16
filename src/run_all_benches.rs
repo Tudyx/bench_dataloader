@@ -7,15 +7,8 @@ use std::process::Command;
 const NB_EPOCH: usize = 1;
 const BATCH_SIZE: &[usize] = &[16, 64, 128];
 const LIBARIES: &[&[&str]] = &[RUST_CMD, PYTHON_CMD];
-const RUST_CMD: &[&str] = &[
-    "cargo",
-    "run",
-    "--release",
-    "--bin",
-    "rust_dataloader",
-    "--",
-];
-const PYTHON_CMD: &[&str] = &["/usr/bin/python3", "src/python_dataloader.py"];
+const RUST_CMD: &[&str] = &["cargo", "run", "--release", "--bin", "run", "--"];
+const PYTHON_CMD: &[&str] = &["/usr/bin/python3", "torch_bench/torch_bench/run.py"];
 
 fn main() {
     let mut _nb_processed_image = 0;
