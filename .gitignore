@@ -3,5 +3,5 @@
 /data
 /test
 /dist
-_pycache__/
+__pycache__/
 .cache/
