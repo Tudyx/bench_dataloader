@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "torch-bench"
+version = "0.1.0"
+description = ""
+authors = ["Tudyx <56633664+Tudyx@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "torch_bench"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.0.0"
+torchvision = "^0.15.1"
+torchaudio = "^2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
