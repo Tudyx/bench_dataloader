@@ -41,9 +41,9 @@ def get_size(mode="train"):
         N = 50000
         VAL_SIZE = int(N * ST_VAL_SIZE)
         if mode == "train":
-            return N - VAL_SIZE
+            return N  # - VAL_SIZE
         else:
-            return VAL_SIZE
+            return 0  # VAL_SIZE
 
 
 class RandomDataset(Dataset):
