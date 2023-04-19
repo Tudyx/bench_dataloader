@@ -2,7 +2,7 @@ mod dataset;
 use ai_dataloader::Len;
 use clap::Parser;
 use dataset::RandomDataset;
-use std::time::Instant;
+use std::{error::Error, fs::OpenOptions, io::Write, path::PathBuf, time::Instant};
 
 use ai_dataloader::collate::TorchCollate;
 use ai_dataloader::indexable::DataLoader;
@@ -10,18 +10,22 @@ use ai_dataloader::indexable::DataLoader;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// Batch size.
+    /// Number of sample within a batch.
     #[arg(short, long)]
     batch_size: usize,
+    /// Path where to store the result.
+    #[arg(short, long)]
+    csv_path: PathBuf,
 }
 
 // To compute the samples_per_seconds
 // We are taking the time per batch and calculating the speed per batch
 // Then, we are taking the average. The first batch is considerably slower
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
-    println!("Hello, I've been run with {} batch size", cli.batch_size);
+
+    println!("cudart version {}", tch::utils::version_cudart());
 
     let dataset = RandomDataset::default();
 
@@ -30,9 +34,11 @@ fn main() {
         .collate_fn(TorchCollate)
         .build();
 
+    let device = tch::Device::Cuda(0);
     let mut num_sample = 0;
     let now = Instant::now();
-    for (_sample, label) in loader.iter() {
+    for (sample, label) in loader.iter() {
+        let _sample = sample.to(device);
         num_sample += label.len();
     }
     let elapsed = now.elapsed();
@@ -50,4 +56,27 @@ fn main() {
             .div_f64(loader.len() as f64)
             .div_f64(cli.batch_size as f64))
     );
+
+    println!(
+        "Sample per seconds {:.2?}",
+        1. / (elapsed
+            .div_f64(loader.len() as f64)
+            .div_f64(cli.batch_size as f64))
+        .as_secs_f64()
+    );
+
+    // Append the result to the csv
+    let mut csv_path = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(cli.csv_path)?;
+
+    writeln!(
+        csv_path,
+        "ai-dataloader,{},{}",
+        cli.batch_size,
+        elapsed.as_secs_f64()
+    )?;
+
+    Ok(())
 }
