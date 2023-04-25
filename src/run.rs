@@ -39,7 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let now = Instant::now();
     for (sample, label) in loader.iter() {
         let _sample = sample.to(device);
-        num_sample += label.len();
+        num_sample += label.size1().unwrap();
     }
     let elapsed = now.elapsed();
     assert_eq!(num_sample, 50_000);

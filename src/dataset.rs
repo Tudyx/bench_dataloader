@@ -29,13 +29,13 @@ impl Len for RandomDataset {
 }
 
 impl GetSample for RandomDataset {
-    type Sample = (Array3<u8>, usize);
+    type Sample = (Array3<u8>, i32);
 
     fn get_sample(&self, index: usize) -> Self::Sample {
         let image_path = self.dataset_dir.join(format!("{index}.jpeg"));
         let image = image::open(image_path).unwrap();
         // The axes/dimensions created follow the pytorch convention : Color x Height x Width
         let image = image.into_rgb8().into_ndarray3();
-        (image, index % NUM_CLASS)
+        (image, (index % NUM_CLASS) as i32)
     }
 }
