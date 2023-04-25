@@ -16,6 +16,7 @@ chrono = "0.4.24"
 tch = "0.11.0"
 colored = "2.0.0"
 polars ={ version = "0.28.0", features = ["lazy"] }
+plotly = "0.8.3"
 
 [[bin]]
 name = "run"
