@@ -21,6 +21,8 @@ const PYTHON_CMD: &[&str] = &[
     "torch_bench/torch_bench/run.py",
 ];
 
+const DATASET: &str = "random-unique";
+
 fn main() -> Result<(), Box<dyn Error>> {
     // Write header to the result csv.
     let csv_path = format!("res/run_{:?}.csv", Utc::now());
@@ -36,6 +38,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             command.arg("--batch-size").arg(batch_size.to_string());
             command.arg("--csv-path").arg(&csv_path);
+            command.arg("--dataset").arg(DATASET);
             dbg!(&command);
 
             let output = command.output().expect("failed to execute process");

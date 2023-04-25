@@ -144,7 +144,7 @@ def get_eval_transforms():
     return eval_transform
 
 
-class PytorchDataset(Dataset):
+class RandomDataset(Dataset):
     def __init__(self):
         super().__init__()
 

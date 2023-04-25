@@ -11,9 +11,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run python dataloader")
     parser.add_argument("--batch-size", type=int)
     parser.add_argument("--csv-path")
+    parser.add_argument("--dataset", required=True)
     args = parser.parse_args()
 
-    loader = PytorchLoader()
+    loader = PytorchLoader(dataset=args.dataset)
 
     train_loader = loader.get_train_loader(batch_size=args.batch_size)
 

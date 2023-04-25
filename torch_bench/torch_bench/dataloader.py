@@ -1,23 +1,26 @@
-# from src.dataloaders.base import DataLoader
-from torchvision import transforms
-
-
-from .dataset import (
+from .dataset.random import (
     get_train_transforms,
     get_eval_transforms,
     LABELS_DICT,
-    PytorchDataset,
+    RandomDataset,
 )
+
+from .dataset.random_unique import RandomUniqueDataset
 
 import torch.utils.data as torch_data
 
 
-DATASET = PytorchDataset()
-
-
 class PytorchLoader:
+    def __init__(self, dataset: str):
+        if dataset == "random":
+            self.dataset = RandomDataset()
+        elif dataset == "random-unique":
+            self.dataset = RandomUniqueDataset()
+        else:
+            raise ValueError(f"Unknown dataset type {dataset}")
+
     def _get(self, mode, transform, **kwargs):
-        dataset = DATASET.get_local(mode=mode, transforms=transform)
+        dataset = self.dataset.get_local(mode=mode, transforms=transform)
 
         sampler = None
 
