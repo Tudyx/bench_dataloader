@@ -129,7 +129,7 @@ where
 
     let now = Instant::now();
     for sample in loader.iter() {
-        // With generic version we can't really do anithing
+        // With generic version we can't really do anything
         let _ = sample;
     }
     let elapsed = now.elapsed();

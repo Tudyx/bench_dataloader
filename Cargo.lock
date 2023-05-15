@@ -43,7 +43,7 @@ dependencies = [
 
 [[package]]
 name = "ai-dataloader"
-version = "0.5.1"
+version = "0.5.4"
 dependencies = [
  "itertools",
  "ndarray",
