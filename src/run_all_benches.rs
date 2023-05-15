@@ -15,9 +15,8 @@ const NB_EPOCH: usize = 100;
 const BATCH_SIZE: &[usize] = &[16, 64, 128];
 const LIBARIES: &[&[&str]] = &[RUST_CMD, PYTHON_CMD];
 const RUST_CMD: &[&str] = &["cargo", "run", "--release", "--bin", "run", "--"];
-// FIXME: config poetry to use a local venv and give the path here.
 const PYTHON_CMD: &[&str] = &[
-    "/home/teddy/.cache/pypoetry/virtualenvs/torch-bench-pHys0gd8-py3.10/bin/python",
+    "torch_bench/.venv/bin/python",
     "torch_bench/torch_bench/run.py",
 ];
 
