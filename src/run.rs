@@ -27,12 +27,15 @@ struct Cli {
     csv_path: PathBuf,
     #[arg(short, long, value_enum)]
     dataset: Dataset,
+    #[arg(short, long)]
+    num_workers: usize,
 }
 
 fn run_random(cli: Cli, dataset: RandomDataset) -> Result<(), Box<dyn Error>> {
     let loader = DataLoader::builder(dataset)
         .batch_size(cli.batch_size)
         .collate_fn(TorchCollate)
+        .num_threads(cli.num_workers)
         .build();
 
     let device = tch::Device::Cuda(0);
@@ -45,7 +48,13 @@ fn run_random(cli: Cli, dataset: RandomDataset) -> Result<(), Box<dyn Error>> {
     let elapsed = now.elapsed();
     assert_eq!(num_sample, 50_000);
 
-    report(elapsed, loader.len(), cli.batch_size, cli.csv_path)?;
+    report(
+        elapsed,
+        loader.len(),
+        cli.batch_size,
+        cli.csv_path,
+        cli.num_workers,
+    )?;
 
     Ok(())
 }
@@ -66,7 +75,13 @@ fn run_random_unique(cli: Cli, dataset: RandomUnique) -> Result<(), Box<dyn Erro
     let elapsed = now.elapsed();
     assert_eq!(num_sample, 50_000);
 
-    report(elapsed, loader.len(), cli.batch_size, cli.csv_path)?;
+    report(
+        elapsed,
+        loader.len(),
+        cli.batch_size,
+        cli.csv_path,
+        cli.num_workers,
+    )?;
 
     Ok(())
 }
@@ -76,6 +91,7 @@ fn report(
     num_batch: usize,
     batch_size: usize,
     csv_path: PathBuf,
+    num_threads: usize,
 ) -> Result<(), Box<dyn Error>> {
     println!("Total loading time: {:.2?}", total_time);
 
@@ -103,9 +119,10 @@ fn report(
 
     writeln!(
         csv_path,
-        "ai-dataloader,{},{}",
+        "ai-dataloader,{},{},{}",
         batch_size,
-        total_time.as_secs_f64()
+        total_time.as_secs_f64(),
+        num_threads
     )?;
     Ok(())
 }
@@ -118,7 +135,8 @@ fn report(
 #[allow(dead_code)]
 fn run<D>(cli: Cli, dataset: D) -> Result<(), Box<dyn Error>>
 where
-    D: ai_dataloader::Dataset,
+    D: ai_dataloader::Dataset + Sync,
+    D::Sample: Send,
     DefaultCollate: Collate<D::Sample>, // Shouldn't be required
     TorchCollate: Collate<D::Sample>,
 {
@@ -134,7 +152,13 @@ where
     }
     let elapsed = now.elapsed();
 
-    report(elapsed, loader.len(), cli.batch_size, cli.csv_path)?;
+    report(
+        elapsed,
+        loader.len(),
+        cli.batch_size,
+        cli.csv_path,
+        cli.num_workers,
+    )?;
 
     Ok(())
 }

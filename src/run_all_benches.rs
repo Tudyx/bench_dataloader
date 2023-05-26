@@ -22,14 +22,16 @@ const PYTHON_CMD: &[&str] = &[
 
 const DATASET: &str = "random-unique";
 
+const NUM_WORKERS: &[usize] = &[2, 3, 4];
+
 fn main() -> Result<(), Box<dyn Error>> {
     // Write header to the result csv.
     let csv_path = format!("res/run_{:?}.csv", Utc::now());
     fs::create_dir_all("res")?;
-    fs::write(&csv_path, "library,batch_size,total_time\n")?;
+    fs::write(&csv_path, "library,batch_size,total_time,num_workers\n")?;
 
     for _ in 0..NB_EPOCH {
-        for (args, batch_size) in iproduct!(LIBARIES, BATCH_SIZE) {
+        for (args, batch_size, num_workers) in iproduct!(LIBARIES, BATCH_SIZE, NUM_WORKERS) {
             let mut command = Command::new(args[0]);
             // command.env("TORCH_CUDA_VERSION", "cu117");
             for arg in args[1..].iter() {
@@ -38,6 +40,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             command.arg("--batch-size").arg(batch_size.to_string());
             command.arg("--csv-path").arg(&csv_path);
             command.arg("--dataset").arg(DATASET);
+            command.arg("--num-workers").arg(num_workers.to_string());
             dbg!(&command);
 
             let output = command.output().expect("failed to execute process");

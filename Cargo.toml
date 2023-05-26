@@ -3,8 +3,6 @@ name = "bench_dataloader"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 ai-dataloader = { path = "../ai-dataloader", features = ["tch"] }
 clap = { version = "4.2.1", features = ["derive"] }
@@ -13,9 +11,9 @@ nshare = { version = "0.9.0", features = ["ndarray", "image"] }
 itertools = "0.10.5"
 ndarray = "0.15.6"
 chrono = "0.4.24"
-tch = "0.11.0"
+tch = "0.12.0"
 colored = "2.0.0"
-polars ={ version = "0.28.0", features = ["lazy"] }
+polars ={ version = "0.29.0", features = ["lazy"] }
 plotly = "0.8.3"
 ndarray-rand = "0.14.0"
 
